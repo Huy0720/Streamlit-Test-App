@@ -77,31 +77,26 @@ selected_years = st.sidebar.selectbox("Select Year", years)
 
 # File type checkboxes
 st.sidebar.subheader("📂 Select File Types")
-# selected_types = [
-#     t for t in filetypes if st.sidebar.checkbox(t, value=True, key=f"type_{t}")
-# ]
+if "selected_filetypes" not in st.session_state:
+    st.session_state.selected_filetypes = filetypes.copy()
 
-# selected_filetypes = st.sidebar.multiselect(
-#     "Select File Type(s)", filetypes, default=filetypes
-# )
+# controls
+c1, c2 = st.sidebar.columns(2)
+if c1.button("Select all"):
+    st.session_state.selected_filetypes = filetypes.copy()
+if c2.button("Clear all"):
+    st.session_state.selected_filetypes = []
 
-
-all_types = st.sidebar.checkbox("Select all file types", True, key="all_types")
-
-if all_types:
-    selected_filetypes = st.sidebar.multiselect(
-        "Select file types",
-        filetypes,
-        default=filetypes,
-        label_visibility="collapsed"
-    )
-else:
-    selected_filetypes = st.sidebar.multiselect(
-        "Select file types",
-        filetypes,
-        label_visibility="collapsed"
-    )
-
+# multiselect reflects state
+selected_filetypes = st.sidebar.multiselect(
+    "Select file types",
+    options=filetypes,
+    default=st.session_state.selected_filetypes,
+    label_visibility="collapsed",
+    key="multiselect_types",
+)
+# persist manual edits
+st.session_state.selected_filetypes = selected_filetypes
 
 
 filtered = grouped[
