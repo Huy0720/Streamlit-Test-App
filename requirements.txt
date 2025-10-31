@@ -4,3 +4,4 @@ plotly
 pycountry
 folium
 streamlit-folium
+openpyxl
