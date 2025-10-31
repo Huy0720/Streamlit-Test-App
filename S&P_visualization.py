@@ -78,25 +78,29 @@ selected_years = st.sidebar.selectbox("Select Year", years)
 # File type checkboxes
 st.sidebar.subheader("📂 Select File Types")
 if "selected_filetypes" not in st.session_state:
-    st.session_state.selected_filetypes = filetypes.copy()
+    st.session_state["selected_filetypes"] = filetypes.copy()
 
-# controls
-c1, c2 = st.sidebar.columns(2)
-if c1.button("Select all"):
-    st.session_state.selected_filetypes = filetypes.copy()
-if c2.button("Clear all"):
-    st.session_state.selected_filetypes = []
+# --- Select/Clear buttons ---
+col1, col2 = st.sidebar.columns(2)
+with col1:
+    if st.button("Select all", key="btn_select_all_types"):
+        st.session_state["selected_filetypes"] = filetypes.copy()
 
-# multiselect reflects state
+with col2:
+    if st.button("Clear all", key="btn_clear_all_types"):
+        st.session_state["selected_filetypes"] = []
+
+# --- Multiselect (always reflects session state) ---
 selected_filetypes = st.sidebar.multiselect(
     "Select file types",
     options=filetypes,
-    default=st.session_state.selected_filetypes,
+    default=st.session_state["selected_filetypes"],
     label_visibility="collapsed",
-    key="multiselect_types",
+    key="multi_filetypes"   # unique key
 )
-# persist manual edits
-st.session_state.selected_filetypes = selected_filetypes
+
+# --- Update session state when user manually changes selection ---
+st.session_state["selected_filetypes"] = selected_filetypes
 
 
 filtered = grouped[
