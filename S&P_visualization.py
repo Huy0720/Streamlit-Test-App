@@ -77,18 +77,51 @@ selected_years = st.sidebar.selectbox("Select Year", years)
 
 # File type checkboxes
 st.sidebar.subheader("📂 Select File Types")
+# if "selected_filetypes" not in st.session_state:
+#     st.session_state["selected_filetypes"] = filetypes.copy()
+
+# # --- Select/Clear buttons ---
+# col1, col2 = st.sidebar.columns(2)
+# with col1:
+#     if st.button("Select all", key="btn_select_all_types"):
+#         st.session_state["selected_filetypes"] = filetypes.copy()
+
+# with col2:
+#     if st.button("Clear all", key="btn_clear_all_types"):
+#         st.session_state["selected_filetypes"] = []
+
+# # --- Multiselect (always reflects session state) ---
+# selected_filetypes = st.sidebar.multiselect(
+#     "Select file types",
+#     options=filetypes,
+#     default=st.session_state["selected_filetypes"],
+#     label_visibility="collapsed",
+#     key="multi_filetypes"   # unique key
+# )
+
+# # --- Update session state when user manually changes selection ---
+# st.session_state["selected_filetypes"] = selected_filetypes
+
+
 if "selected_filetypes" not in st.session_state:
     st.session_state["selected_filetypes"] = filetypes.copy()
 
-# --- Select/Clear buttons ---
+
+# --- Define callbacks ---
+def select_all():
+    st.session_state["selected_filetypes"] = filetypes.copy()
+
+def clear_all():
+    st.session_state["selected_filetypes"] = []
+
+
+# --- Sidebar layout ---
 col1, col2 = st.sidebar.columns(2)
 with col1:
-    if st.button("Select all", key="btn_select_all_types"):
-        st.session_state["selected_filetypes"] = filetypes.copy()
-
+    st.button("Select all", on_click=select_all)
 with col2:
-    if st.button("Clear all", key="btn_clear_all_types"):
-        st.session_state["selected_filetypes"] = []
+    st.button("Clear all", on_click=clear_all)
+
 
 # --- Multiselect (always reflects session state) ---
 selected_filetypes = st.sidebar.multiselect(
@@ -96,11 +129,13 @@ selected_filetypes = st.sidebar.multiselect(
     options=filetypes,
     default=st.session_state["selected_filetypes"],
     label_visibility="collapsed",
-    key="multi_filetypes"   # unique key
+    key="multi_filetypes"
 )
 
-# --- Update session state when user manually changes selection ---
+# --- Sync session state ---
 st.session_state["selected_filetypes"] = selected_filetypes
+
+
 
 
 filtered = grouped[
