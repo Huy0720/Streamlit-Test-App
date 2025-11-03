@@ -4,8 +4,8 @@ import plotly.express as px
 import pycountry
 import json
 import urllib.request
-from streamlit_folium import st_folium
-import folium
+# from streamlit_folium import st_folium
+# import folium
 
 # ------------------------------------------------------
 # 1. Page setup
@@ -224,7 +224,8 @@ fig_map.update_geos(
     showcoastlines=True,
     coastlinecolor="white",
     showland=True,
-    landcolor="#f5f5f5",                 # light gray land background
+    #landcolor="#f5f5f5",                 # light gray land background
+    landcolor="#e0e0e0",
     showcountries=True,
     countrycolor="white",
 )
@@ -236,7 +237,8 @@ fig_map.update_traces(
 )
 
 fig_map.update_layout(
-    geo_bgcolor="#d9d9d9",              # light gray background for oceans
+    #geo_bgcolor="#d9d9d9",              # light gray background for oceans
+    geo_bgcolor="#c0c0c0",
     coloraxis_colorbar=dict(title="Reports"),
     margin=dict(l=0, r=0, t=40, b=0),
     height=550
