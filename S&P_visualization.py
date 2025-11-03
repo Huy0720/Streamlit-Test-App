@@ -102,38 +102,30 @@ st.sidebar.subheader("📂 Select File Types")
 # # --- Update session state when user manually changes selection ---
 # st.session_state["selected_filetypes"] = selected_filetypes
 
-
-if "selected_filetypes" not in st.session_state:
-    st.session_state["selected_filetypes"] = filetypes.copy()
-
-
-# --- Define callbacks ---
-def select_all():
-    st.session_state["selected_filetypes"] = filetypes.copy()
-
-def clear_all():
-    st.session_state["selected_filetypes"] = []
-
-
-# --- Sidebar layout ---
 col1, col2 = st.sidebar.columns(2)
-with col1:
-    st.button("Select all", on_click=select_all)
-with col2:
-    st.button("Clear all", on_click=clear_all)
+select_all_clicked = col1.button("Select all", key="btn_select_all_types")
+clear_all_clicked  = col2.button("Clear all",  key="btn_clear_all_types")
 
+# Decide default + key based on button click
+if select_all_clicked:
+    default = filetypes            # select everything
+    key_suffix = "all"             # new key -> new widget -> default applies
+elif clear_all_clicked:
+    default = []                   # clear selection
+    key_suffix = "none"
+else:
+    default = None                 # keep whatever the widget currently has
+    key_suffix = "keep"
 
-# --- Multiselect (always reflects session state) ---
+# --- Multiselect ---
 selected_filetypes = st.sidebar.multiselect(
     "Select file types",
     options=filetypes,
-    default=st.session_state["selected_filetypes"],
+    # Only pass a default when we're forcing a reset; otherwise omit it
+    **({"default": default} if default is not None else {}),
     label_visibility="collapsed",
-    key="multi_filetypes"
+    key=f"multi_filetypes_{key_suffix}",
 )
-
-# --- Sync session state ---
-st.session_state["selected_filetypes"] = selected_filetypes
 
 
 
